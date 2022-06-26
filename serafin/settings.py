@@ -2,29 +2,29 @@
 Django settings for the serafin project.
 
 For more information on this file, see
-https://docs.djangoproject.com/en/1.8/topics/settings/
+https://docs.djangoproject.com/en/2.2/topics/settings/
 
 For the full list of settings and their values, see
-https://docs.djangoproject.com/en/1.8/ref/settings/
+https://docs.djangoproject.com/en/2.2/ref/settings/
 '''
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+import os
 from collections import OrderedDict
 from django.utils.translation import ugettext_lazy as _
-import os
 
+
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
 # Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
+# See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'change-me')
+SECRET_KEY = os.environ.get('DJANGO_SECRET', 'change-me')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = bool(int(os.environ.get('DEBUG', 0)))
-DEBUG = True
+DEBUG = bool(int(os.environ.get('DEBUG', 0)))
 TEMPLATE_DEBUG = DEBUG
 USERDATA_DEBUG = DEBUG
 
@@ -32,6 +32,7 @@ if DEBUG:
     ALLOWED_HOSTS = ['*']
 else:
     ALLOWED_HOSTS = []
+
 ALLOWED_HOSTS_ENV = os.environ.get('ALLOWED_HOSTS')
 if ALLOWED_HOSTS_ENV:
     ALLOWED_HOSTS.extend(ALLOWED_HOSTS_ENV.split(','))
@@ -39,8 +40,6 @@ if ALLOWED_HOSTS_ENV:
 
 # Application definition
 
-# from multisite import SiteID
-# SITE_ID = SiteID(default=1)
 SITE_ID = 1
 
 INSTALLED_APPS = (
@@ -64,7 +63,6 @@ INSTALLED_APPS = (
     'plumbing',
     'system',
 
-
     'filer',
     'serafin.apps.SuitConfig',
     'django.contrib.admin',
@@ -79,7 +77,8 @@ INSTALLED_APPS = (
     'compressor',
     'reversion',
     'constance',
-    'raven.contrib.django.raven_compat',
+    # 'raven.contrib.django.raven_compat',
+
     'serafin.apps.SerafinReConfig',
 )
 
@@ -116,8 +115,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django_settings_export.settings_export',
                 'django.template.context_processors.static',
-                # Insert your TEMPLATE_CONTEXT_PROCESSORS here or use this
-                # list if you haven't customized them:
                 # 'users.context_processors.add_support_email',
             ],
         },
@@ -126,25 +123,24 @@ TEMPLATES = [
 
 
 # Database
-# https://docs.djangoproject.com/en/1.8/ref/settings/#databases
+# https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'HOST': 'db',
-        'PORT': 5432,
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
+        'HOST': os.getenv('POSTGRES_HOST', 'postgres'),
+        'PORT': int(os.getenv('POSTGRES_PORT', 5432)),
+        'NAME': os.getenv('POSTGRES_DB', 'serafin'),
+        'USER': os.getenv('POSTGRES_USER', 'postgres'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', ''),
     }
 }
 
 
 # Internationalization
-# https://docs.djangoproject.com/en/1.8/topics/i18n/
+# https://docs.djangoproject.com/en/2.2/topics/i18n/
 
-LANGUAGE_CODE = 'en'
-
+LANGUAGE_CODE = os.getenv('LANGUAGE_CODE', 'en')
 
 LANGUAGES = (
     ('en', _('English')),
@@ -155,7 +151,7 @@ LOCALE_PATHS = (
     os.path.join(BASE_DIR, 'conf/locale'),
 )
 
-TIME_ZONE = 'Europe/Oslo'
+TIME_ZONE = os.getenv('TIME_ZONE', 'Europe/Oslo')
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
@@ -166,15 +162,16 @@ if USE_HTTPS:
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.8/howto/static-files/
 
-STATIC_URL = '/static/static/'
-STATIC_ROOT = '/vol/web/static'
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/2.2/howto/static-files/
+
+STATIC_URL = '/static/'
+STATIC_ROOT = '/app/static'
 COMPRESS_ENABLED = True
 
-MEDIA_URL = '/static/media/'
-MEDIA_ROOT = '/vol/web/media'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = '/app/media'
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'staticfiles'),
@@ -184,11 +181,7 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     'compressor.finders.CompressorFinder',
-    'npm.finders.NpmFinder',
 )
-
-NPM_FILE_PATTERNS = {
-}
 
 THUMBNAIL_ALIASES = {
     '': {
@@ -259,7 +252,7 @@ EMAIL_SUBJECT_PREFIX = '[Serafin] '
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 
-# SMS service
+# SMS
 
 SMS_SERVICE = 'Console'
 
@@ -306,9 +299,6 @@ REST_FRAMEWORK = {
 }
 
 
-# Admin interface
-
-
 # Logging
 
 LOGGING = {
@@ -319,7 +309,7 @@ LOGGING = {
             'format': '%(asctime)s [%(levelname)s] %(name)s: %(message)s'
         },
         'verbose': {
-            'format': '%(levelname)s %(asctime)s %(module)s '
+            'format': '%(levelname)s %(asctime)s %(module)s ' +
                       '%(process)d %(thread)d %(message)s'
         }
     },
@@ -499,20 +489,20 @@ RESERVED_VARIABLES = [
 # (https://github.com/inonit/serafin-api-sandbox.git)
 # configure the following variables according to the value set in config.js in serafin-api-sandbox
 # all variables must be set as environment variables in both projects
-SANDBOX_IP = "http://localhost"
-SANDBOX_PORT = "3030"
-SANDBOX_ENDPOINT = "compile"
-SANDBOX_API_KEY = "sdkljf56789#KT34_"
+SANDBOX_IP = os.getenv('SANDBOX_IP', 'http://localhost')
+SANDBOX_PORT = os.getenv('SANDBOX_PORT', '3030')
+SANDBOX_ENDPOINT = os.getenv('SANDBOX_ENDPOINT', 'compile')
+SANDBOX_API_KEY = os.getenv('SANDBOX_API_KEY', 'sdkljf56789#KT34_')
 
 
 # Available stylesheets for the dynamic switcher
 
 STYLESHEETS = [
-    {"name": _("Default stylesheet"), "path": "css/style.css"},
-    {"name": _("Nalokson"), "path": "css/style-nalokson.css"},
-    {"name": _("Miksmaster"), "path": "css/style-miksmaster.css"},
-    {"name": _("Miksmaster alternate"),
-     "path": "css/style-miksmaster-alt.css"},
+    {'name': _('Default stylesheet'), 'path': 'css/style.css'},
+    {'name': _('Nalokson'), 'path': 'css/style-nalokson.css'},
+    {'name': _('Miksmaster'), 'path': 'css/style-miksmaster.css'},
+    {'name': _('Miksmaster alternate'),
+     'path': 'css/style-miksmaster-alt.css'},
 ]
 
 STYLESHEET_CHOICES = [(ss['path'], ss['name']) for ss in STYLESHEETS]
@@ -522,12 +512,12 @@ STYLESHEET_CHOICES = [(ss['path'], ss['name']) for ss in STYLESHEETS]
 
 CONSTANCE_CONFIG = OrderedDict([
     ('USER_VARIABLE_PROFILE_ORDER', (
-        u'session, node, stack, reply_session, reply_node, reply_variable',
+        'session, node, stack, reply_session, reply_node, reply_variable',
         'What user variables to list first on a user\'s object page (comma separated)',
         str
     )),
     ('USER_VARIABLE_EXPORT', (
-        u'',
+        '',
         'What user variables to export from user listing (comma separated, leave blank for all)',
         str
     )),

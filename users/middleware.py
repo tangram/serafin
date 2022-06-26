@@ -1,9 +1,9 @@
 from django.contrib import auth
 from django.http import Http404
-from django.shortcuts import get_object_or_404, redirect, reverse
+from django.shortcuts import get_object_or_404
 from django.utils import translation
 from django.utils.functional import SimpleLazyObject
-from django.contrib.auth.middleware import AuthenticationMiddleware
+from django.contrib.auth.middleware import AuthenticationMiddleware as BaseAuthMiddleware
 # from ratelimit import ALL, UNSAFE
 # from ratelimit.core import is_ratelimited
 
@@ -31,7 +31,7 @@ def get_user(request):
     return request._cached_user
 
 
-class AuthenticationMiddleware(AuthenticationMiddleware):
+class AuthenticationMiddleware(BaseAuthMiddleware):
 
     def process_request(self, request):
         request.user = SimpleLazyObject(lambda: get_user(request))

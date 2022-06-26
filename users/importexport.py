@@ -1,11 +1,6 @@
-from __future__ import unicode_literals
-
-from builtins import object
 from import_export import resources, fields, widgets
 from constance import config
 from users.models import User
-
-import functools
 
 
 class UserResource(resources.ModelResource):

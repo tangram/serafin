@@ -1,9 +1,4 @@
-# -*- coding: utf-8 -*-
-
-from __future__ import unicode_literals
-
-from datetime import timedelta, datetime
-import pytz
+from datetime import timedelta, datetime, timezone
 import re
 
 from django.contrib.auth import get_user_model
@@ -651,7 +646,7 @@ class Engine(object):
                 user=self.user)
             for useraccess in useraccesses:
 
-                start_time = datetime.now(pytz.utc)
+                start_time = datetime.now(timezone.utc)
                 delay = node.get('delay')
                 variable_name = delay.get('variable')
                 delay_number = delay.get('number')

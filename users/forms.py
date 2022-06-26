@@ -1,16 +1,13 @@
-from __future__ import unicode_literals
-
 # from defender import utils
 from django.contrib.auth.forms import SetPasswordForm
 from django.utils.translation import ugettext_lazy as _
 
-from django import forms
+from django import forms, utils
 from django.conf import settings
 from django.contrib import admin
 from django.contrib.admin.forms import AdminAuthenticationForm
 from django.contrib.sites.models import Site
 from django.urls import reverse
-from django.template import Context
 from django.template.loader import get_template
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode

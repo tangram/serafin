@@ -1,4 +1,3 @@
-from __future__ import unicode_literals
 from django.utils.translation import ugettext_lazy as _
 
 import re
@@ -12,7 +11,7 @@ from django.utils import timezone
 
 from easy_thumbnails.files import get_thumbnailer
 from easy_thumbnails.alias import aliases
-from .models import Variable, ProgramUserAccess, Session, Content, Page
+from .models import Variable, ProgramUserAccess, Session, Content
 from tasker.models import Task
 from system.tasks import init_session
 

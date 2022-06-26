@@ -1,7 +1,5 @@
-from __future__ import unicode_literals
 from django.utils.translation import ugettext_lazy as _
 
-from django.contrib.auth import get_user_model
 from huey.contrib.djhuey import db_task
 from system.engine import Engine
 

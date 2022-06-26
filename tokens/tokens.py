@@ -1,13 +1,9 @@
 '''Implementation of django.contrib.auth.tokens using user id'''
 
-from __future__ import unicode_literals
-
-from builtins import object
 from datetime import date
 from django.conf import settings
 from django.utils.http import int_to_base36, base36_to_int
 from django.utils.crypto import constant_time_compare, salted_hmac
-from django.utils import six
 
 
 class TokenGenerator(object):
@@ -42,15 +38,15 @@ class TokenGenerator(object):
         return True
 
     def _make_token_with_timestamp(self, user_id, timestamp):
-        # timestamp is number of days since 2001-1-1.  Converted to
-        # base 36, this gives us a 3 digit string until about 2121
+        # timestamp is number of days since 2001-1-1. Converted to
+        # base 36, this gives us a 3 digit string until about 2121.
         ts_b36 = int_to_base36(timestamp)
 
-        value = (six.text_type(user_id) + six.text_type(timestamp))
+        value = f'{user_id}{timestamp}'
 
-        key_salt = "tokens.tokens.TokenGenerator"
-        hash = salted_hmac(key_salt, value).hexdigest()[::2]
-        return "%s-%s" % (ts_b36, hash)
+        key_salt = settings.SECRET_KEY
+        hash_ = salted_hmac(key_salt, value).hexdigest()[::2]
+        return f'{ts_b36}-{hash_}'
 
     def _num_days(self, dt):
         return (dt - date(2001, 1, 1)).days

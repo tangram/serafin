@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 from time import sleep
 
 from django.test import TestCase
@@ -8,7 +6,7 @@ from django.db.models import signals
 from system.engine import Engine
 from system.models import Program, ProgramUserAccess, Session, Page, Email, SMS
 from system.signals import *
-from users.models import User, StatefulAnonymousUser
+from users.models import StatefulAnonymousUser
 
 
 class EngineTestCase(TestCase):

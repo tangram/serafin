@@ -1,19 +1,17 @@
-from __future__ import print_function
 import datetime
-import pickle
 from time import sleep
 
 from django.contrib.auth import get_user_model
 from django.db.models import signals
-from django.test import TestCase, modify_settings
+from django.test import TestCase
 from django.utils import timezone
 
-from huey.contrib.djhuey import HUEY as huey, task
-from huey.constants import EmptyData
+from huey.contrib.djhuey import HUEY as huey
 
 from tasker.models import Task
 from system.models import Program, ProgramUserAccess, Session
 from system.signals import *
+
 
 User = get_user_model()
 

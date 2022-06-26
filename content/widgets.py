@@ -1,8 +1,3 @@
-# -*- coding: utf-8 -*-
-
-from __future__ import absolute_import, unicode_literals
-
-from builtins import object
 from django import forms
 from django.conf import settings
 from django.contrib.admin.sites import site
@@ -13,6 +8,7 @@ from django.utils.safestring import mark_safe
 from filer.fields.file import AdminFileWidget
 import re
 import json
+
 
 class DummyForeignObjectRel(object):
     class DummyRelatedField(object):
@@ -27,6 +23,7 @@ class DummyForeignObjectRel(object):
     @property
     def model(self):
         return None
+
 
 class ContentWidget(forms.Widget):
 

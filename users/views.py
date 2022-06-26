@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 from django.contrib.auth.views import redirect_to_login, update_session_auth_hash, PasswordChangeView
 from django.utils.translation import ugettext_lazy as _
 
@@ -7,7 +5,7 @@ from django.conf import settings
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import views as auth_views
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.urls import reverse
@@ -16,11 +14,13 @@ from django.views.decorators.csrf import csrf_exempt
 from events.signals import log_event
 from system.engine import Engine
 from system.models import Variable
-from tokens.tokens import token_generator
 from users.models import User
 
-from twilio import twiml
-from plivo import plivoxml
+try:
+    from twilio import twiml
+    from plivo import plivoxml
+except ImportError:
+    pass
 
 import json
 import logging

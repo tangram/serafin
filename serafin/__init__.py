@@ -8,8 +8,6 @@ from django.contrib import admin
 from django.contrib.admin import sites
 
 
-import backports.csv as csv
-
 class CustomAdminSite(admin.AdminSite):
 
     index_template = 'admin/index.html'
@@ -17,7 +15,6 @@ class CustomAdminSite(admin.AdminSite):
     def index(self, request, extra_context=None):
         from request.models import Request
         from request.plugins import plugins
-        from system.models import Program
 
         if extra_context is None:
             extra_context = {}
@@ -30,9 +27,6 @@ class CustomAdminSite(admin.AdminSite):
 
         if active_program is not None:
             request.session["_program_id"] = active_program.id
-        # else:
-            # request.session["_program_id"] = 0
-            
 
         qs = Request.objects.this_month()
         for plugin in plugins.plugins:
@@ -40,7 +34,7 @@ class CustomAdminSite(admin.AdminSite):
 
         extra_context['plugins'] = plugins.plugins
 
-        return super(CustomAdminSite, self).index(request, extra_context)
+        return super().index(request, extra_context)
 
 
 custom_admin_site = CustomAdminSite()

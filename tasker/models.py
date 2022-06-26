@@ -1,9 +1,3 @@
-from __future__ import unicode_literals
-
-import datetime
-from builtins import object
-from time import sleep
-
 from django.utils.translation import ugettext_lazy as _
 
 from django.db import models
@@ -12,8 +6,6 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.utils import timezone
 from huey.contrib.djhuey import HUEY as huey
-from huey.constants import EmptyData
-import pickle
 
 
 class TaskManager(models.Manager):
@@ -54,13 +46,6 @@ class Task(models.Model):
     time = models.DateTimeField(_('time'))
 
     objects = TaskManager()
-
-    def __unicode__(self):
-        return _('%(time)s: %(sender)s, %(action)s') % {
-            'time': self.time,
-            'sender': self.sender,
-            'action': self.action,
-        }
 
     def __str__(self):
         return _('%(time)s: %(sender)s, %(action)s') % {

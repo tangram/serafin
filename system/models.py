@@ -1,8 +1,3 @@
-# -*- coding: utf-8 -*-
-
-from __future__ import absolute_import, unicode_literals
-
-from builtins import object
 import datetime
 import mistune
 import random
@@ -16,8 +11,6 @@ from django.core.exceptions import ValidationError
 from django.template.loader import render_to_string
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
-from adminsortable.fields import SortableForeignKey
-from adminsortable.models import SortableMixin
 from filer.fields.image import FilerImageField
 
 from jsonfield import JSONField
@@ -61,9 +54,6 @@ class Variable(models.Model):
         verbose_name = _('variable')
         verbose_name_plural = _('variables')
         ordering = ('display_name', 'name', 'value')
-
-    def __unicode__(self):
-        return self.name
 
     def __str__(self):
         return self.name
@@ -135,9 +125,6 @@ class Program(models.Model):
         verbose_name = _('program')
         verbose_name_plural = _('programs')
 
-    def __unicode__(self):
-        return self.title
-
     def enroll(self, user, start_time=None, time_factor=None):
         ProgramUserAccess.objects.create(
             program=self,
@@ -177,9 +164,6 @@ class ProgramUserAccess(models.Model):
         verbose_name = _('user access')
         verbose_name_plural = _('user accesses')
 
-    def __unicode__(self):
-        return '%s: %s' % (self.program, self.user.__unicode__())
-
     def __str__(self):
         return '%s: %s' % (self.program, self.user.__str__())
 
@@ -213,9 +197,6 @@ class Session(models.Model):
     class Meta(object):
         verbose_name = _('session')
         verbose_name_plural = _('sessions')
-
-    def __unicode__(self):
-        return self.title or _('Session %s' % self.id)
 
     def __str__(self):
         return self.title or _('Session %s' % self.id)
@@ -278,9 +259,6 @@ class Content(models.Model):
         verbose_name = _('content')
         verbose_name_plural = _('contents')
 
-    def __unicode__(self):
-        return self.title or '%s %s' % (self._meta.verbose_name, self.id)
-
     def __str__(self):
         return self.title or '%s %s' % (self._meta.verbose_name, self.id)
 
@@ -292,9 +270,11 @@ class Content(models.Model):
 
     def clean(self):
         Program.clean_is_lock(self.program)
+
+
 class PageManager(models.Manager):
     def get_queryset(self):
-        return super(PageManager, self).get_queryset().filter(content_type='page')
+        return super().get_queryset().filter(content_type='page')
 
 
 class Page(Content):
@@ -308,7 +288,7 @@ class Page(Content):
         verbose_name_plural = _('pages')
 
     def __init__(self, *args, **kwargs):
-        super(Page, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.content_type = 'page'
 
     def check_value(self, user, value, field_type):
@@ -515,7 +495,7 @@ class Page(Content):
 
 class EmailManager(models.Manager):
     def get_queryset(self):
-        return super(EmailManager, self).get_queryset().filter(content_type='email')
+        return super().get_queryset().filter(content_type='email')
 
 
 class Email(Content):
@@ -529,7 +509,7 @@ class Email(Content):
         verbose_name_plural = _('e-mails')
 
     def __init__(self, *args, **kwargs):
-        super(Email, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.content_type = 'email'
 
     def send(self, user):
@@ -539,7 +519,7 @@ class Email(Content):
         message = remove_comments(message)
         message = variable_replace(user, message)
         html_message = mistune.markdown(message, escape=False)
-        if self.program.is_rtl:
+        if self.program and self.program.is_rtl:
             p_tag = '<p>'
             p_rtl_tag = '<p dir="rtl">'
             html_message = html_message.replace(p_tag, p_rtl_tag)
@@ -554,7 +534,7 @@ class Email(Content):
 
 class CodeManager(models.Manager):
     def get_queryset(self):
-        return super(CodeManager, self).get_queryset().filter(content_type='code')
+        return super().get_queryset().filter(content_type='code')
 
 
 class Code(Content):
@@ -568,7 +548,7 @@ class Code(Content):
         verbose_name_plural = _('codes')
 
     def __init__(self, *args, **kwargs):
-        super(Code, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.content_type = 'code'
 
     def execute(self, user):
@@ -577,7 +557,7 @@ class Code(Content):
 
 class SMSManager(models.Manager):
     def get_queryset(self):
-        return super(SMSManager, self).get_queryset().filter(content_type='sms')
+        return super().get_queryset().filter(content_type='sms')
 
 
 class SMS(Content):
@@ -591,7 +571,7 @@ class SMS(Content):
         verbose_name_plural = _('SMSs')
 
     def __init__(self, *args, **kwargs):
-        super(SMS, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.content_type = 'sms'
         self.display_title = ''
 

@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 import re
 
 from django.utils.translation import ugettext_lazy as _
@@ -33,7 +31,7 @@ class EventAdmin(ImportExportModelAdmin):
     actions = None
 
     def __init__(self, *args, **kwargs):
-        super(EventAdmin, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.list_display_links = None
 
     def has_add_permission(self, request):
@@ -46,12 +44,13 @@ class EventAdmin(ImportExportModelAdmin):
     change_list_template = 'admin/events/event/change_list.html'
 
     def get_queryset(self, request):
-        queryset = super(EventAdmin, self).get_queryset(request)
+        queryset = super().get_queryset(request)
 
         if request.user.program_restrictions.exists():
             program_ids = request.user.program_restrictions.values_list('id')
             return queryset.filter(actor__program__id__in=program_ids).distinct()
 
         return queryset
+
 
 admin.site.register(Event, EventAdmin)

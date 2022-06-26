@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Serafin Parser mini-language implementation details.
 
@@ -46,12 +45,6 @@ to the Parser on initialization. If the Parser is initialized without
 a User instance, attempts to lookup undefined variables will raise an error.
 """
 
-from __future__ import absolute_import, unicode_literals
-
-from past.builtins import cmp
-from builtins import str
-from builtins import map
-from builtins import object
 import math
 import operator as oper
 from sys import float_info
@@ -62,11 +55,12 @@ from django.utils import timezone
 from django.utils.translation import ugettext as _
 from pyparsing import (
     Literal, CaselessLiteral, Keyword, Word, Combine, Optional,
-    ParseException, ZeroOrMore, Forward, Suppress, Group,
+    ZeroOrMore, Forward, Suppress, Group,
     alphas, alphanums, nums, oneOf, quotedString, removeQuotes,
-    delimitedList, nestedExpr, sglQuotedString, dblQuotedString, commaSeparatedList,
-    infixNotation, opAssoc, ParseResults
+    delimitedList
 )
+from pyparsing.results import ParseResults
+from pyparsing.exceptions import ParseException
 
 
 def str_trim_float(value):
@@ -77,6 +71,10 @@ def str_trim_float(value):
             return value[:-2]
         return value
     return str(value)
+
+
+def cmp(a, b):
+    return (a > b) - (a < b)
 
 
 class Parser(object):

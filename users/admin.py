@@ -1,14 +1,9 @@
-from __future__ import unicode_literals
-
-import uuid
-from builtins import str
-from builtins import object
 from django.utils.translation import ugettext_lazy as _
 
 from django import forms
 from django.conf import settings
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.db.models import Q
 from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
@@ -44,7 +39,7 @@ class UserCreationForm(forms.ModelForm):
         return password1
 
     def save(self, commit=True):
-        user = super(UserCreationForm, self).save(commit=False)
+        user = super().save(commit=False)
         user.set_password(self.cleaned_data['password1'])
         user.email = self.cleaned_data['email']
         user.phone = self.cleaned_data['phone']
@@ -65,7 +60,7 @@ class BlankPasswordField(forms.Field):
 
     def __init__(self, *args, **kwargs):
         kwargs.setdefault("required", False)
-        super(BlankPasswordField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def bound_data(self, data, initial):
         return initial
@@ -82,7 +77,7 @@ class UserChangeForm(forms.ModelForm):
     )
 
     def __init__(self, *args, **kwargs):
-        super(UserChangeForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fields['data'].help_text = ''
         self.fields['data'].required = False
         self.fields['is_active'].help_text = _('Designates whether this user should be treated as active. Unselect this instead of deleting accounts.')
@@ -124,7 +119,7 @@ class UserDataWidget(forms.Widget):
         )
 
 
-class UserAdmin(UserAdmin, ImportExportModelAdmin):
+class UserAdmin(BaseUserAdmin, ImportExportModelAdmin):
     list_display = ['id', 'email', 'phone',  'date_joined', 'last_login', 'is_superuser', 'is_staff', 'is_active']
     search_fields = ['id', 'email', 'phone', 'data']
     ordering = ['id']
@@ -198,17 +193,17 @@ class UserAdmin(UserAdmin, ImportExportModelAdmin):
     def change_view(self, request, object_id, form_url='', extra_context=None):
         extra_context = extra_context or {}
         extra_context['log'] = Event.objects.filter(actor=object_id).order_by('-time')
-        return super(UserAdmin, self).change_view(request, object_id,
+        return super().change_view(request, object_id,
             form_url, extra_context=extra_context)
 
     def get_fieldsets(self, request, obj=None):
         if request.user.is_superuser:
-            return super(UserAdmin, self).get_fieldsets(request, obj=obj)
+            return super().get_fieldsets(request, obj=obj)
         else:
             return self.restricted_fieldsets
 
     def get_queryset(self, request):
-        queryset = super(UserAdmin, self).get_queryset(request)
+        queryset = super().get_queryset(request)
 
         if request.user.program_restrictions.exists():
             program_ids = request.user.program_restrictions.values_list('id')

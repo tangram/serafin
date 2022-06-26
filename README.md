@@ -1,4 +1,5 @@
 # Serafin
+
 _Logic-driven web content creation kit_
 
 Serafin is a Django-based web platform that gives content builders a set of flexible building blocks for creating logic-driven sites. Examples include:
@@ -8,7 +9,7 @@ Serafin is a Django-based web platform that gives content builders a set of flex
 - E-learning programs
 - Dynamic websites with a complex underlying logic
 
-Serafin was developed by [Inonit AS](http://inonit.no/) for [SERAF](http://www.med.uio.no/klinmed/english/research/centres/seraf/), the Norwegian Centre for Addiction Research at the University of Oslo, in order for them to create a program to help users stop smoking while gathering research data on the efficacy of therapeutic techniques. The program, Endre, and its content is [available here](https://github.com/inonit/serafin-endre).
+Serafin was developed for [SERAF](http://www.med.uio.no/klinmed/english/research/centres/seraf/), the Norwegian Centre for Addiction Research at the University of Oslo, in order for them to create a program to help users stop smoking while gathering research data on the efficacy of therapeutic techniques. The program, Endre, and its content is [available here](https://github.com/inonit/serafin-endre).
 
 Program flow is controlled on different levels. Sessions are built as a series of pages or other events (e-mail, SMS), allowing the users' path to be controlled by logic applied to their choices. Sessions may be put into sequence, where registered users are invited to follow the Program day by day, or sessions may be accessed manually. Pages and other content may present text, media, or forms for the user to fill out.
 
@@ -25,15 +26,15 @@ Run docker-compose to build the environment:
 
 In a separate terminal, run database migrations (first time, but may be needed after model changes):
 
-    $ docker-compose exec app ./manage.py migrate 
+    $ docker-compose exec app poetry run ./manage.py migrate 
 
 Create a local admin user (first time only):
 
-    $ docker-compose exec app ./manage.py createsuperuser
+    $ docker-compose exec app poetry run ./manage.py createsuperuser
 
 Run tests with:
 
-    $ docker-compose exec app ./manage.py test
+    $ docker-compose exec app poetry run ./manage.py test
 
 You may run other Django management commands the same way.
 

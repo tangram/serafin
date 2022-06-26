@@ -1,17 +1,13 @@
-from __future__ import unicode_literals
-
 from time import sleep
 from collections import namedtuple
 
-from django.conf import settings
-from django.http import HttpRequest
 from django.test import TestCase
 from django.db.models import signals
 
 from system.engine import Engine
 from system.models import Program, ProgramUserAccess, Session, Page, Email, SMS
 from system.signals import *
-from users.models import User, StatefulAnonymousUser
+from users.models import User
 from users.views import receive_sms
 from tokens.tokens import token_generator
 

@@ -1,10 +1,4 @@
-from __future__ import unicode_literals
-from __future__ import print_function
-
 import logging
-from builtins import str
-from builtins import object
-from smtplib import SMTPDataError
 
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
@@ -14,18 +8,21 @@ from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, Permis
 from django.contrib.sites.models import Site
 from django.core.mail.message import EmailMultiAlternatives
 from django.urls import reverse
-from django.db import models, IntegrityError
-from django.template import Context
+from django.db import models
 from django.template.loader import get_template
 
 from collections import OrderedDict
 from jsonfield import JSONField
-from plivo import RestClient as PlivoRestClient
 
-from system.models import ProgramUserAccess, Session
-from tokens.tokens import token_generator
-from twilio.rest import Client
 import requests
+from tokens.tokens import token_generator
+
+try:
+    from plivo import RestClient as PlivoRestClient
+    from twilio.rest import Client as TwilioRestClient
+except ImportError:
+    pass
+
 
 logger = logging.getLogger(__name__)
 
@@ -43,9 +40,8 @@ class UserManager(BaseUserManager):
         user.save()
         return user
 
-    def create_superuser(self, id, password, email='', phone=''):
-        user = self.create_user(id=id, password=password,
-                                email=email, phone=phone)
+    def create_superuser(self, id='', password='', email='', phone=''):
+        user = self.create_user(id=id, password=password, email=email, phone=phone)
         user.is_staff = True
         user.is_superuser = True
         user.save()
@@ -63,7 +59,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     program_restrictions = models.ManyToManyField(
         to='system.Program', blank=True,
         verbose_name=_('program restrictions'),
-        help_text=_('Staff user has limited access only to the chosen Programs (and related data). '
+        help_text=_('Staff user has limited access only to the chosen Programs (and related data). ' +
                     'If no Programs are chosen, there is no restriction.'),
         related_name='user_restriction_set',
         related_query_name='user_restriction'
@@ -266,8 +262,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         '''
         return self, False
 
-    def __unicode__(self):
-        return u'%s' % self.id
+    def __str__(self):
+        return '%s' % self.id
 
     class Meta(object):
         verbose_name = _('user')
@@ -304,8 +300,7 @@ class StatefulAnonymousUser(AnonymousUser):
         del self.data['email']
         del self.data['phone']
 
-        user = User.objects.create_user(
-            None, password, email, phone, data=self.data)
+        user = User.objects.create_user(None, password, email, phone, data=self.data)
 
         return user, True
 

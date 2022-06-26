@@ -1,8 +1,3 @@
-# -*- coding: utf-8 -*-
-
-from __future__ import absolute_import, unicode_literals
-
-from builtins import str
 import textwrap
 
 from django.conf import settings
@@ -245,9 +240,9 @@ def set_stylesheet(request):
     stylesheet and use it if existing.
     """
     redirect_to = request.POST.get("next", request.GET.get("next"))
-    if not is_safe_url(url=redirect_to, host=request.get_host()):
+    if not is_safe_url(url=redirect_to, allowed_hosts=[request.get_host()]):
         redirect_to = request.META.get("HTTP_REFERER")
-        if not is_safe_url(url=redirect_to, host=request.get_host()):
+        if not is_safe_url(url=redirect_to, allowed_hosts=[request.get_host()]):
             redirect_to = "/"
     response = HttpResponseRedirect(redirect_to)
     if request.method == "POST":
@@ -269,7 +264,7 @@ class VariableViewSet(viewsets.ModelViewSet):
 
     queryset = Variable.objects.all().order_by("name")
     serializer_class = VariableSerializer
-# this is the one view affected by the removal of _program_id in after we had issues in the dashboard
+    # this is the one view affected by the removal of _program_id in after we had issues in the dashboard
     def get_queryset(self):
         if '_program_id' in self.request.session:
             queryset = self.queryset.filter(program__id=self.request.session['_program_id'])
@@ -293,7 +288,7 @@ class VariableSearchViewSet(viewsets.ModelViewSet):
         Should only return variables for the currently working
         program if any.
         """
-        queryset = super(VariableSearchViewSet, self).get_queryset()
+        queryset = super().get_queryset()
         if '_program_id' in self.request.session:
             queryset = queryset.filter(program__id=self.request.session['_program_id'])
         return queryset
@@ -302,7 +297,7 @@ class VariableSearchViewSet(viewsets.ModelViewSet):
         """
         Add system variables to search results
         """
-        response = super(VariableSearchViewSet, self).list(request, *args, **kwargs)
+        response = super().list(request, *args, **kwargs)
         reserved_variables = [v for v in getattr(settings, "RESERVED_VARIABLES", {})
                               if "domains" in v and "user" in v["domains"]]
         response.data.extend(reserved_variables)

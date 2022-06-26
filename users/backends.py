@@ -1,4 +1,3 @@
-from __future__ import unicode_literals
 import re
 from django.contrib.auth.backends import ModelBackend
 from django.core.exceptions import ValidationError

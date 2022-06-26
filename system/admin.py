@@ -1,17 +1,11 @@
-from __future__ import unicode_literals
-
-from builtins import str
-from builtins import object
 from django.utils.translation import ugettext_lazy as _
 from django import forms
 from django.conf import settings
 from django.contrib import admin
-from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
 from django.db import models, IntegrityError
 from django.db.models import Q
 from django.http import HttpResponseRedirect
-from adminsortable.admin import NonSortableParentAdmin, SortableStackedInline
 
 from suit.widgets import AutosizedTextarea
 from jsonfield import JSONField
@@ -25,7 +19,7 @@ from content.widgets import ContentWidget, TextContentWidget, SMSContentWidget, 
 
 class VariableForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
-        super(VariableForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fields['value'].help_text = _('Initial value remains static unless '
                                            'set as a user value using a hidden set value field.')
         self.fields['user_editable'].help_text = _('User editable fields can be changed '
@@ -95,7 +89,7 @@ class VariableAdmin(admin.ModelAdmin):
         js = ['admin/variable.js']
 
     def get_queryset(self, request):
-        queryset = super(VariableAdmin, self).get_queryset(request)
+        queryset = super().get_queryset(request)
 
         if '_program_id' in request.session:
             queryset = queryset.filter(
@@ -112,7 +106,7 @@ class VariableAdmin(admin.ModelAdmin):
         return queryset
 
     def get_form(self, request, obj=None, **kwargs):
-        form = super(VariableAdmin, self).get_form(request, obj, **kwargs)
+        form = super().get_form(request, obj, **kwargs)
         if request.user.program_restrictions.exists():
             program_ids = request.user.program_restrictions.values_list('id')
             form.base_fields['program'].queryset = Program.objects.filter(
@@ -258,7 +252,7 @@ class ProgramAdmin(VersionAdmin):
             if not request.POST.getlist(admin.ACTION_CHECKBOX_NAME):
                 if hasattr(request, "session"):
                     del request.session["_program_id"]
-        return super(ProgramAdmin, self).changelist_view(request, extra_context)
+        return super().changelist_view(request, extra_context)
 
     def set_program(modeladmin, request, queryset):
         program_id = queryset.first().id
@@ -270,7 +264,7 @@ class ProgramAdmin(VersionAdmin):
     set_program.short_description = _('Set Program')
 
     def get_queryset(self, request):
-        queryset = super(ProgramAdmin, self).get_queryset(request)
+        queryset = super().get_queryset(request)
 
         if not request.user.is_superuser:
             if request.user.program_restrictions.exists():
@@ -296,7 +290,7 @@ class ProgramAdmin(VersionAdmin):
 
 class SessionForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
-        super(SessionForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         if 'data' in self.fields:
             self.fields['data'].help_text = ''
         if 'route_slug' in self.fields:
@@ -431,7 +425,7 @@ class SessionAdmin(VersionAdmin):
     note_excerpt.short_description = _('Admin note excerpt')
 
     def get_queryset(self, request):
-        queryset = super(SessionAdmin, self).get_queryset(request)
+        queryset = super().get_queryset(request)
 
         if not request.user.is_superuser:
             if request.user.program_restrictions.exists():
@@ -450,7 +444,7 @@ class SessionAdmin(VersionAdmin):
         return request.user.has_perm('system.view_session', obj)
 
     def get_form(self, request, obj=None, **kwargs):
-        form = super(SessionAdmin, self).get_form(request, obj, **kwargs)
+        form = super().get_form(request, obj, **kwargs)
         form.request_user = request.user
         if not request.user.is_superuser and request.user.program_restrictions.exists():
             program_ids = request.user.program_restrictions.values_list('id')
@@ -535,7 +529,7 @@ class SessionAdmin(VersionAdmin):
 
 class ContentForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
-        super(ContentForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fields['data'].help_text = ''
 
     def clean_data(self):
@@ -615,7 +609,7 @@ class ContentAdmin(VersionAdmin):
     copy.short_description = _('Copy selected content')
 
     def get_queryset(self, request):
-        queryset = super(ContentAdmin, self).get_queryset(request)
+        queryset = super().get_queryset(request)
 
         if '_program_id' in request.session:
             queryset = queryset.filter(
@@ -640,7 +634,7 @@ class ContentAdmin(VersionAdmin):
         return request.user.has_perm('system.view_content', obj)
 
     def get_form(self, request, obj=None, **kwargs):
-        form = super(ContentAdmin, self).get_form(request, obj, **kwargs)
+        form = super().get_form(request, obj, **kwargs)
         form.request_user = request.user
         if request.user.program_restrictions.exists():
             program_ids = request.user.program_restrictions.values_list('id')
@@ -665,14 +659,14 @@ class PageAdmin(ContentAdmin):
 
 class TextContentForm(ContentForm):
     def __init__(self, *args, **kwargs):
-        super(ContentForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fields['data'].help_text = ''
         self.fields['data'].initial = [{"content_type": "text", "content": ""}]
 
 
 class EmailForm(TextContentForm):
     def __init__(self, *args, **kwargs):
-        super(EmailForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fields['display_title'].label = _('Subject')
 
     class Meta(object):
@@ -703,7 +697,7 @@ class EmailAdmin(ContentAdmin):
 
 class SMSForm(ContentForm):
     def __init__(self, *args, **kwargs):
-        super(ContentForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fields['data'].help_text = ''
         self.fields['data'].initial = [{"content_type": "text", "content": ""}]
 

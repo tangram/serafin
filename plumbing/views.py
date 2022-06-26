@@ -1,6 +1,3 @@
-from __future__ import unicode_literals
-
-from builtins import object
 from django.contrib.admin.views.decorators import staff_member_required
 from django.urls import reverse
 from django.http import HttpResponse

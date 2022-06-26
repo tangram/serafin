@@ -1,27 +1,15 @@
-from __future__ import unicode_literals
-from __future__ import print_function
-
-from datetime import timedelta
-from django.db.models import Q, Max, Sum, CharField, FloatField, Value as V, DateField
-from django.db.models.functions import Substr, StrIndex, Cast
 from django.conf import settings
-from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.urls import reverse
-from django.http import Http404, HttpResponseRedirect, JsonResponse, HttpResponse
+from django.http import Http404, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, render
-from django.utils import translation, timezone
 from filer.models import File, Image
-from itertools import chain
 # from ratelimit import UNSAFE
 # from ratelimit.decorators import ratelimit
-from system.models import Session, Page, ProgramUserAccess,  Variable
-from events.models import Event
-from events.signals import log_event
-from users.models import User
+from system.models import Session, Page
 from system.engine import Engine
-from serafin.settings import TIME_ZONE
 import json
+
 
 def home(request):
     return render(request, 'home.html', {})
@@ -69,6 +57,7 @@ def get_location_from_ip(request):
     r = r.json()
 
     return JsonResponse(r)
+
 
 def get_page(request):
 

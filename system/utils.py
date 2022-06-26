@@ -1,8 +1,4 @@
-from __future__ import unicode_literals
-from __future__ import print_function
-from builtins import str
 from django.utils.translation import ugettext_lazy as _
-
 
 import re
 
@@ -84,10 +80,11 @@ def live_variable_replace(user, text):
 
     return text, variables
 
+
 # for toggleset, togglesetmulti, multiplechoice, multipleselection
 # try to find if the option value (choicevalue) is already checked previously
 # by the user (saved in variable variableName)
-def is_it_checked(user, variableName,choiceValue):
+def is_it_checked(user, variableName, choiceValue):
     user_data = user.data
     variableValue = user_data.get(variableName)
 
@@ -108,6 +105,7 @@ def is_it_checked(user, variableName,choiceValue):
         return True
     else:
         return False
+
 
 def process_email_links(user, text):
     '''Replaces login link markup with login link'''

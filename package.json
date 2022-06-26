@@ -2,21 +2,36 @@
   "name": "serafin",
   "version": "1.0.0",
   "description": "An interactive content creation kit",
+  "author": "SERAF <seraf-admin@medisin.uio.no>",
+  "license": "AGPL-3.0",
   "private": true,
-  "directories": {
-    "doc": "docs"
-  },
+  "homepage": "https://github.com/inonit/serafin#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/inonit/serafin.git"
   },
-  "author": "Inonit AS <post@inonit.no>",
-  "license": "TBA",
   "bugs": {
     "url": "https://github.com/inonit/serafin/issues"
   },
-  "homepage": "https://github.com/inonit/serafin#readme",
+  "directories": {
+    "doc": "docs"
+  },
   "dependencies": {
-    "bower": "^1.4.1"
+    "angular": "~1.4.1",
+    "angular-sanitize": "1.4.2",
+    "marked": "~0.3.3",
+    "ment.io": "~0.9.23",
+    "lodash": "~3.10.0",
+    "jquery": "~2.1.4",
+    "jqueryui": "~1.11.4",
+    "jsplumb": "1.7.10",
+    "foundation": "~5.5.2",
+    "angular-foundation": "~0.6.0",
+    "codemirror": "^5.49.2",
+    "angular-ui-codemirror": "^0.3.0",
+    "moment": "2.26.0",
+    "ng-emoji-picker": "^0.13.3",
+    "ng-idle": "^1.3.2",
+    "intl-tel-input": "^17.0.3"
   }
 }
