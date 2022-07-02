@@ -8,17 +8,13 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.2/ref/settings/
 '''
 
-import os
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 from collections import OrderedDict
 from django.utils.translation import ugettext_lazy as _
+import os
 
-
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('DJANGO_SECRET', 'change-me')
@@ -129,9 +125,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'HOST': os.getenv('POSTGRES_HOST', 'postgres'),
-        'PORT': int(os.getenv('POSTGRES_PORT', 5432)),
+        'PORT': os.getenv('POSTGRES_PORT', '5432'),
         'NAME': os.getenv('POSTGRES_DB', 'serafin'),
-        'USER': os.getenv('POSTGRES_USER', 'postgres'),
+        'USER': os.getenv('POSTGRES_USER', 'serafin'),
         'PASSWORD': os.getenv('POSTGRES_PASSWORD', ''),
     }
 }
@@ -141,6 +137,7 @@ DATABASES = {
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
 LANGUAGE_CODE = os.getenv('LANGUAGE_CODE', 'en')
+
 
 LANGUAGES = (
     ('en', _('English')),
@@ -155,7 +152,7 @@ TIME_ZONE = os.getenv('TIME_ZONE', 'Europe/Oslo')
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
-USE_HTTPS = False
+USE_HTTPS = bool(int(os.getenv('USE_HTTPS', 1)))
 
 if USE_HTTPS:
     SECURE_SSL_REDIRECT = True
@@ -182,6 +179,9 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     'compressor.finders.CompressorFinder',
 )
+
+NPM_FILE_PATTERNS = {
+}
 
 THUMBNAIL_ALIASES = {
     '': {
@@ -246,20 +246,25 @@ LOG_MAX_MILLISECONDS = 5 * 60 * 1000  # 5 minutes
 
 # Email
 
-SERVER_EMAIL = 'Serafin <post@example.com>'
-DEFAULT_FROM_EMAIL = 'Serafin <post@example.com>'
-EMAIL_SUBJECT_PREFIX = '[Serafin] '
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST = os.getenv('EMAIL_HOST', 'localhost')
+EMAIL_PORT = int(os.getenv('EMAIL_PORT', 25))
+EMAIL_USE_TLS = bool(int(os.getenv('EMAIL_USE_TLS', 0)))
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
+SERVER_EMAIL = os.getenv('SERVER_EMAIL', 'Serafin <post@example.com>')
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'Serafin <post@example.com>')
+EMAIL_SUBJECT_PREFIX = os.getenv('EMAIL_SUBJECT_PREFIX', '[Serafin] ')
+EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', 'django.core.mail.backends.smtp.EmailBackend')
 
 
 # SMS
 
-SMS_SERVICE = 'Console'
+SMS_SERVICE = os.getenv('SMS_SERVICE', 'Console')
 
 
 # Google Analytics
 
-GOOGLE_ANALYTICS_ID = ''
+GOOGLE_ANALYTICS_ID = os.getenv('GOOGLE_ANALYTICS_ID', '')
 
 
 # Huey
@@ -276,8 +281,8 @@ HUEY = {
         'health_check_interval': 60,
     },
     'connection': {
-        'host': 'redis',
-        'port': 6379
+        'host': os.getenv('REDIS_HOST', 'redis'),
+        'port': int(os.getenv('REDIS_PORT', 6379))
     }
 }
 
@@ -485,14 +490,13 @@ RESERVED_VARIABLES = [
     }
 ]
 
-# SANDBOX CONFIG : Must run the SANDBOX API project on another server
-# (https://github.com/inonit/serafin-api-sandbox.git)
-# configure the following variables according to the value set in config.js in serafin-api-sandbox
-# all variables must be set as environment variables in both projects
-SANDBOX_IP = os.getenv('SANDBOX_IP', 'http://localhost')
-SANDBOX_PORT = os.getenv('SANDBOX_PORT', '3030')
-SANDBOX_ENDPOINT = os.getenv('SANDBOX_ENDPOINT', 'compile')
-SANDBOX_API_KEY = os.getenv('SANDBOX_API_KEY', 'sdkljf56789#KT34_')
+
+# Sandbox
+
+SANDBOX_URL = os.getenv('SANDBOX_URL', '')
+SANDBOX_PORT = os.getenv('SANDBOX_PORT', '')
+SANDBOX_PATH = os.getenv('SANDBOX_PATH', '')
+SANDBOX_API_KEY = os.getenv('SANDBOX_API_KEY', '')
 
 
 # Available stylesheets for the dynamic switcher
@@ -524,8 +528,8 @@ CONSTANCE_CONFIG = OrderedDict([
 ])
 
 CONSTANCE_REDIS_CONNECTION = {
-    'host': 'redis',
-    'port': 6379
+    'host': os.getenv('REDIS_HOST', 'redis'),
+    'port': int(os.getenv('REDIS_PORT', 6379))
 }
 
 

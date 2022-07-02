@@ -23,7 +23,7 @@ class EngineException(Exception):
 
 
 class Engine(object):
-    '''A simplified decision engine to traverse the Session graph for a user'''
+    '''A decision engine to traverse the Session graph for a user'''
 
     def __init__(self, user=None, user_id=None, context={}, push=False, is_interactive=False):
         '''
@@ -140,12 +140,10 @@ class Engine(object):
 
     def is_stacked(self):
         '''Check if current session has sessions below in stack'''
-
         return bool(self.user.data.get('stack'))
 
     def is_dead_end(self, node_id):
         '''Check if current node is a dead end (end of session)'''
-
         target_edges = self.get_node_edges(node_id)
         normal_edges = self.get_normal_edges(target_edges)
         return len(normal_edges) == 0
@@ -237,7 +235,6 @@ class Engine(object):
 
     def trigger_node(self, node):
         '''Trigger action for a given node, return if normal node'''
-
         node_id = node.get('id')
         node_type = node.get('type')
         ref_id = node.get('ref_id')
@@ -421,8 +418,8 @@ class Engine(object):
             body['v3'] = True
             body['data'] = data
 
-            sandbox_url = "%s:%s/%s" % (settings.SANDBOX_IP,
-                                        settings.SANDBOX_PORT, settings.SANDBOX_ENDPOINT)
+            sandbox_url = '%s:%s/%s' % (settings.SANDBOX_URL,
+                                        settings.SANDBOX_PORT, settings.SANDBOX_PATH)
 
             try:
                 # send request to python sandbox
@@ -430,7 +427,7 @@ class Engine(object):
                     '%s %s python code: code sent to sandbox',
                     self.user, self.session)
                 r = requests.post(sandbox_url, data=json.dumps(body), timeout=12, headers={
-                                  "X-API-Key": str(settings.SANDBOX_API_KEY), "Content-Type": "application/json"})
+                                  'X-API-Key': str(settings.SANDBOX_API_KEY), 'Content-Type': 'application/json'})
 
             except Timeout:
                 # handle error
@@ -440,7 +437,7 @@ class Engine(object):
                     time=timezone.now(),
                     subject=self.user,
                     code=code,
-                    log="timeout while sending code to sandbox"
+                    log='timeout while sending code to sandbox'
                 )
                 cl.save()
 
@@ -457,7 +454,7 @@ class Engine(object):
                     time=timezone.now(),
                     subject=self.user,
                     code=code,
-                    log="connection error while sending code to sandbox"
+                    log='connection error while sending code to sandbox'
                 )
                 cl.save()
                 self.logger.debug(
@@ -479,7 +476,7 @@ class Engine(object):
                             time=timezone.now(),
                             subject=self.user,
                             code=code,
-                            log="sandbox returned timeout. killedByContainer:" +
+                            log='sandbox returned timeout. killedByContainer:' +
                                 str(r['killedByContainer'])
                         )
                         cl.save()
@@ -529,7 +526,7 @@ class Engine(object):
                                 time=timezone.now(),
                                 subject=self.user,
                                 code=code,
-                                log="user.data updated"
+                                log='user.data updated'
                             )
                             cl.save()
 
@@ -539,7 +536,7 @@ class Engine(object):
                                 time=timezone.now(),
                                 subject=self.user,
                                 code=code,
-                                log="user.data can not be updated with sandbox output. stdout=" +
+                                log='user.data can not be updated with sandbox output. stdout=' +
                                     str(r['stdout'])
                             )
                             cl.save()
@@ -556,7 +553,7 @@ class Engine(object):
                         time=timezone.now(),
                         subject=self.user,
                         code=code,
-                        log="status of the request: " + str(r)
+                        log='status of the request: ' + str(r)
                     )
                     cl.save()
                     self.logger.debug(
@@ -656,19 +653,19 @@ class Engine(object):
                         if variable_name in self.user.data:
                             delay_number = int(
                                 self.user.data.get(variable_name))
-                            self.logger.debug("Delay node using variable: %s => %s" % (
+                            self.logger.debug('Delay node using variable: %s => %s' % (
                                 variable_name, delay_number))
                         else:
                             # trying to get the predefined value of the variable from the database
                             delay_number = int(Variable.objects.get(
                                 name=variable_name).get_value())
-                            self.logger.debug("Delay node using variable: %s => %s" % (
+                            self.logger.debug('Delay node using variable: %s => %s' % (
                                 variable_name, delay_number))
                     except Exception as e:
-                        self.logger.error("failed to use variable(%s) in delay node: %s" % (
+                        self.logger.error('failed to use variable(%s) in delay node: %s' % (
                             variable_name, e.message))
                 else:
-                    self.logger.debug("Delay node not using a variable")
+                    self.logger.debug('Delay node not using a variable')
 
                 kwargs = {
                     delay.get('unit'): float(delay_number * float(useraccess.time_factor)),

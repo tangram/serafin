@@ -1,7 +1,6 @@
 .git
-.docker-data
+.docker
 *.log
-env
 docs
 static
 staticfiles/lib
