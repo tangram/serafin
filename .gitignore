@@ -9,6 +9,7 @@ __MACOSX
 *.py[co]
 *.egg
 *.egg-info
+__pycache__
 dist
 build
 eggs

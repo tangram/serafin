@@ -32,6 +32,11 @@ Create a local admin user (first time only):
 
     $ docker-compose exec app poetry run ./manage.py createsuperuser
 
+Run collectstatic and compilemessages (first time only):
+
+    $ docker-compose exec app poetry run ./manage.py collectstatic
+    $ docker-compose exec app poetry run ./manage.py compilemessages
+
 Run tests with:
 
     $ docker-compose exec app poetry run ./manage.py test

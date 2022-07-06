@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load i18n static thumbnail %}
 {% block title %}
-Endre - et program for deg som vil slutte å røyke
+Naloksonkurs
 {% endblock title %}
 {% block content %}
 <div class="page">
@@ -9,19 +9,7 @@ Endre - et program for deg som vil slutte å røyke
         <h1><div class="logo">{{ item.title_resolved }}</div></h1>
     </div>
 
-    {% if site.name == 'Nalokson' %}
-
-    <div class="center">
-        <h2>SERAF-sertifisert Naloksonkurs</h2>
-
-        <p>Velkommen til dette nettkurset hvor du vil få opplæring i hvordan du skal lære opp andre i å forebygge overdoser, og i bruk av Nalokson.</p>
-
-        <a class="large button" href="/register" title="">
-            <strong>Kom i gang</strong>
-        </a>
-    </div>
-
-    {% else %}
+    {% if site.name == 'Endre' %}
 
     <p><strong>Stump røyken med den digitale røykesluttveilederen "Endre"</strong></p>
 
@@ -32,6 +20,18 @@ Endre - et program for deg som vil slutte å røyke
     <div class="center">
         <a class="large button" href="/register" title="">
             <strong>Registrer deg her</strong>
+        </a>
+    </div>
+
+    {% else %}
+
+    <h1>SERAF-sertifisert Naloksonkurs</h1>
+
+    <p>Velkommen til dette nettkurset hvor du vil få opplæring i hvordan du skal lære opp andre i å forebygge overdoser, og i bruk av Nalokson.</p>
+
+    <div class="center">
+        <a class="large button" href="/register" title="">
+            <strong>Kom i gang</strong>
         </a>
     </div>
 

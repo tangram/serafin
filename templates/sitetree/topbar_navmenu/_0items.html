@@ -3,7 +3,7 @@
     <!-- <top-bar-section > -->
         <section class="top-bar-section ng-isolate-scope" style="left: 0%;">
 
-        <ul class="{% if item.is_current or item.in_current_branch %}active{% endif %} {% if item.hint == "left" or item.hint == "right" %}{{ item.hint }}{% else %}left{% endif %}">
+        <ul class="{% if item.is_current or item.in_current_branch %}active{% endif %} {% if item.hint == 'left' or item.hint == 'right' %}{{ item.hint }}{% else %}left{% endif %}">
             {% if item.has_children %}
                 <li has-dropdown class="has-dropdown ng-isolate-scope not-click">
                     <a href="{{ item.url_resolved }}">

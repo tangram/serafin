@@ -1,6 +1,6 @@
 FROM python:3.10
 
-RUN apt-get update && apt-get install -y supervisor nodejs npm
+RUN apt-get update && apt-get install -y supervisor nodejs npm gettext
 RUN npm install -g bower
 RUN pip install poetry
 RUN apt-get autoremove -y && \

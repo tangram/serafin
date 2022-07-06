@@ -201,7 +201,7 @@ function ChatController() {
                 gumStream = stream;
                 input = audioContext.createMediaStreamSource(stream);
                 scope.rec = new WebAudioRecorder(input, {
-                    workerDir: "/static/static/js/",
+                    workerDir: "/static/js/",
                     encoding: 'mp3',
                     onEncoderLoading: function(recorder, encoding) {
                         // show "loading encoder..." display

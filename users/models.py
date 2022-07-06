@@ -171,7 +171,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                 subject = '[%s] %s' % (current_site.program.title, subject)
                 from_email = current_site.program.from_email or settings.DEFAULT_FROM_EMAIL
             else:
-                subject = settings.EMAIL_SUBJECT_PREFIX + subject
+                subject = settings.EMAIL_SUBJECT_PREFIX + ' ' + subject
                 from_email = settings.DEFAULT_FROM_EMAIL
 
             email = EmailMultiAlternatives(

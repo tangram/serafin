@@ -7,14 +7,14 @@ https://docs.djangoproject.com/en/2.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.2/ref/settings/
 '''
-
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-from collections import OrderedDict
-from django.utils.translation import ugettext_lazy as _
 import os
+from collections import OrderedDict
+
+from django.utils.translation import ugettext_lazy as _
+# from multisite import SiteID
+
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('DJANGO_SECRET', 'change-me')
@@ -80,12 +80,12 @@ INSTALLED_APPS = (
 
 MIDDLEWARE = (
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'users.middleware.AuthenticationMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django_user_agents.middleware.UserAgentMiddleware',
@@ -138,7 +138,6 @@ DATABASES = {
 
 LANGUAGE_CODE = os.getenv('LANGUAGE_CODE', 'en')
 
-
 LANGUAGES = (
     ('en', _('English')),
     ('nb', _('Norwegian')),
@@ -152,7 +151,7 @@ TIME_ZONE = os.getenv('TIME_ZONE', 'Europe/Oslo')
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
-USE_HTTPS = bool(int(os.getenv('USE_HTTPS', 1)))
+USE_HTTPS = bool(int(os.getenv('USE_HTTPS', 0)))
 
 if USE_HTTPS:
     SECURE_SSL_REDIRECT = True
@@ -253,7 +252,7 @@ EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
 SERVER_EMAIL = os.getenv('SERVER_EMAIL', 'Serafin <post@example.com>')
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'Serafin <post@example.com>')
-EMAIL_SUBJECT_PREFIX = os.getenv('EMAIL_SUBJECT_PREFIX', '[Serafin] ')
+EMAIL_SUBJECT_PREFIX = os.getenv('EMAIL_SUBJECT_PREFIX', '[Serafin]')
 EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', 'django.core.mail.backends.smtp.EmailBackend')
 
 
