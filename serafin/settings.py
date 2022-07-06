@@ -36,7 +36,8 @@ if ALLOWED_HOSTS_ENV:
 
 # Application definition
 
-SITE_ID = 1
+# SITE_ID = SiteID(default=int(os.getenv('DEFAULT_SITE', 1)))
+SITE_ID = int(os.getenv('DEFAULT_SITE', 1))
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -67,6 +68,7 @@ INSTALLED_APPS = (
     'rules.apps.AutodiscoverRulesConfig',
     'rest_framework',
     'mptt',
+    # 'multisite',
     'easy_thumbnails',
     'huey.contrib.djhuey',
     'import_export',
