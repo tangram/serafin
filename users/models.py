@@ -30,7 +30,7 @@ logger = logging.getLogger(__name__)
 class UserManager(BaseUserManager):
     '''Custom User model Manager'''
 
-    def create_user(self, id, password, email, phone, data=None):
+    def create_user(self, id, password, email, phone=None, data=None):
         user = self.model()
         user.set_password(password)
         user.email = email
@@ -52,7 +52,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     '''Custom User, identified by ID and password'''
 
     email = models.EmailField(_('e-mail address'), max_length=254, unique=True)
-    phone = models.CharField(_('phone number'), max_length=32, unique=True)
+    phone = models.CharField(_('phone number'), max_length=32, unique=True, blank=True, null=True)
 
     is_staff = models.BooleanField(_('staff status'), default=False)
     is_active = models.BooleanField(_('active'), default=True)
@@ -294,11 +294,12 @@ class StatefulAnonymousUser(AnonymousUser):
         '''
         password = self.data['password']
         email = self.data['email']
-        phone = self.data['phone']
+        phone = self.data.get('phone')
 
         del self.data['password']
         del self.data['email']
-        del self.data['phone']
+        if phone:
+            del self.data['phone']
 
         user = User.objects.create_user(None, password, email, phone, data=self.data)
 

@@ -42,7 +42,7 @@ class UserCreationForm(forms.ModelForm):
         user = super().save(commit=False)
         user.set_password(self.cleaned_data['password1'])
         user.email = self.cleaned_data['email']
-        user.phone = self.cleaned_data['phone']
+        user.phone = self.cleaned_data.get('phone')
         if commit:
             user.save()
         return user
